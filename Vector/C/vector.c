@@ -52,7 +52,13 @@ void vector_expand(VectorPTR v) {
         fprintf(stderr, "Failed to allocate buffer.\n");
         abort();
     }
+    int* init_ptr;
     for (int index = v->length; index < v->_max_size; index++) {
-        *(v->buffer + index) = (int*) malloc(sizeof(int));
+        init_ptr = (int*) malloc(sizeof(int));
+        if (init_ptr == NULL) {
+            fprintf(stderr, "Failed to initialize buffer.\n");
+            abort();
+        }
+        *(v->buffer + index) = init_ptr;
     }
 }
