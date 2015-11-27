@@ -3,8 +3,11 @@
 
 int main() {
     VectorPTR v = VectorInit();
-    vector_add(v, 5);
-    vector_add(v, 6);
-    vector_remove(v, 0);
-    printf("%i\n", vector_pop(v, 0));
+    for (int i = 0; i < 1001; i++) {
+        vector_add(v, i);
+    }
+    for (int i = 0; i < 1001; i++) {
+        printf("%i\n", vector_getAt(v, i));
+    }
+    vector_getAt(v, 1001);
 }

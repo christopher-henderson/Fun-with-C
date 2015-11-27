@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdio.h>
 #include "vector.h"
 
 #define BUFFER_INCREMENT 100
@@ -12,16 +13,16 @@ VectorPTR VectorInit() {
     return v;
 }
 
-void vector_add(VectorPTR v, int item) {
+int vector_add(VectorPTR v, int item) {
     if (vector_full(v)) {
         vector_expand(v);
     }
-    *(*(v->buffer + v->length)) = item;
-    v->length++;
+    return *(*(v->buffer + v->length++)) = item;
 }
 
 int vector_getAt(VectorPTR v, unsigned int index) {
     if (index >= v->length) {
+        printf("Vector index out of bounds.\n");
         abort();
     }
     return *(*(v->buffer + index));
@@ -46,11 +47,10 @@ int vector_full(VectorPTR v) {
 
 void vector_expand(VectorPTR v) {
     v->_max_size += BUFFER_INCREMENT;
+    v->buffer = realloc(v->buffer, sizeof(int*) * v->_max_size);
     if (v->buffer == NULL) {
-        v->buffer = (int**) calloc(sizeof(int*), v->_max_size);
-    }
-    else {
-        realloc(v->buffer, v->_max_size);
+        fprintf(stderr, "Failed to allocate buffer.\n");
+        abort();
     }
     for (int index = v->length; index < v->_max_size; index++) {
         *(v->buffer + index) = (int*) malloc(sizeof(int));

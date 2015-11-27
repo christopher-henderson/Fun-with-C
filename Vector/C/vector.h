@@ -8,7 +8,7 @@ typedef struct {
 } Vector, *VectorPTR;
 
 VectorPTR VectorInit();
-void vector_add(VectorPTR v, int item);
+int vector_add(VectorPTR v, int item);
 int vector_getAt(VectorPTR v, unsigned int index);
 int vector_pop(VectorPTR v, unsigned int index);
 void vector_remove(VectorPTR v, unsigned int index);
