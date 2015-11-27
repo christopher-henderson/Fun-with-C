@@ -9,5 +9,5 @@ int main() {
     for (int i = 0; i < 1001; i++) {
         printf("%i\n", vector_getAt(v, i));
     }
-    vector_getAt(v, 1001);
+    // vector_getAt(v, 1001);
 }
