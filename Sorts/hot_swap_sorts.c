@@ -1,76 +1,81 @@
 #include <stdio.h>
 
-void sort(int*, unsigned int, int (*)(int));
-void insertion_sort(int*, unsigned int, int (*)(int));
-void quick_sort(int*, unsigned int, unsigned int, int (*)(int));
-int partition(int*, unsigned int, unsigned int, int (*)(int));
+void sort(int* collection, unsigned int size, int (*)(int, int));
+void insertion_sort(int* collection, unsigned int size, int (*)(int, int));
+void quick_sort(int* collection, unsigned int low, unsigned int high, int (*)(int, int));
+int partition(int* collection, unsigned int low, unsigned int high, int (*)(int, int));
+int main();
 
-void sort(int* collection, unsigned int size, int (*key)(int)) {
+void sort(int* collection, unsigned int size, int (*comp)(int, int)) {
     if (size < 20) {
-        insertion_sort(collection, size, key);
+        insertion_sort(collection, size, comp);
     } else {
-        quick_sort(collection, 0, size - 1, key);
+        quick_sort(collection, 0, size - 1, comp);
     }
 }
 
-void insertion_sort(int* collection, unsigned int size, int (*key)(int)) {
+void insertion_sort(int* collection, unsigned int size, int (*comp)(int, int)) {
+    int j;
     int temp;
-    for (unsigned int i = 0; i < size; i++) {
-        for (unsigned int j = i; j > 0 && key(*(collection + j - 1)) > key(*(collection + j)); j--) {
+    for (int i = 0; i < size; i++) {
+        j = i;
+        while (j > 0 && comp(*(collection + j), *(collection + j - 1))) {
             temp = *(collection + j);
             *(collection + j) = *(collection + j - 1);
             *(collection + j - 1) = temp;
+            j--;
         }
     }
 }
 
-void quick_sort(int* collection, unsigned low, unsigned int high, int (*key)(int)) {
+void quick_sort(int* collection, unsigned int low, unsigned high, int (*comp)(int, int)) {
     if (low < high) {
-        int p = partition(collection, low, high, key);
-        quick_sort(collection, low, p, key);
-        quick_sort(collection, p + 1, high, key);
+        int p = partition(collection, low, high, comp);
+        quick_sort(collection, low, p, comp);
+        quick_sort(collection, p + 1, high, comp);
     }
 }
 
-int partition(int* collection, unsigned low, unsigned int high, int (*key)(int)) {
+ int partition(int* collection, unsigned int low, unsigned int high, int (*comp)(int, int)) {
     int temp;
-    int pivot = key(*(collection + low));
+    int pivot = *(collection + low);
     low--;
     high++;
     while (1) {
         do {
             low++;
-        } while (key(*(collection + low)) < pivot);
+        } while(comp(*(collection + low), pivot));
         do {
             high--;
-        } while (key(*(collection + high)) > pivot);
+        } while(comp(pivot, *(collection + high)));
         if (low < high) {
             temp = *(collection + low);
             *(collection + low) = *(collection + high);
-            *(collection + high) = temp;
+            *(collection + high) = *(collection + low);
         } else {
             return high;
         }
     }
-}
+ }
 
-int key(int item) {
-    return ((float)(item + 5)) / 2;
+int comp(int a, int b) {
+    return a > b;
 }
 
 int main() {
-    int* qsort_collection = (int[]) {21, 20, 19, 18, 17, 16, 15, 14, 13, 12,
-        11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
-    int* insort_collection = (int[]) {5, 4, 3, 2 ,1};
-    sort(insort_collection, 5, (void*) key);
-    sort(qsort_collection, 21, (void*) key);
-    for (int i = 0; i < 5; i++) {
-        printf("%i, ", *(insort_collection + i));
+    int* small = (int[]) {5, 4, 3, 2, 1};
+    int large[21];
+    for (int i=20; i >= 0; i--) {
+        large[i] = i;
+    }
+    sort(small, 5, (void*) comp);
+    sort((int*) large, 21, (void*) comp);
+    for (int i=0; i < 5; i++) {
+        printf("%i, ", *(small + i));
     }
     printf("\n");
-    for (int i = 0; i < 21; i++) {
-        printf("%i, ", *(qsort_collection + i));
+    for (int i=0; i < 21; i++) {
+        printf("%i, ", *(((int*)large) + i));
     }
     printf("\n");
-    return 0;
 }
