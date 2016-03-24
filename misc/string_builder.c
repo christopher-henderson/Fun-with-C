@@ -4,13 +4,13 @@
 struct str_node {
     char value;
     struct str_node* next;
-};
+} Node;
 
 struct str_builder {
     struct str_node* front;
     struct str_node* back;
     unsigned int size;
-};
+} Builder;
 
 struct str_builder make_builder() {
     struct str_builder builder;
@@ -25,6 +25,16 @@ struct str_node* make_node(char c) {
     node->value = c;
     node->next = NULL;
     return node;
+}
+
+void delete(struct str_builder builder) {
+    struct str_node* node = builder.front;
+    struct str_node* next_node;
+    while (node) {
+        next_node = node->next;
+        free(node);
+        node = next_node;
+    }
 }
 
 void append(struct str_builder* builder, char* string) {
@@ -61,5 +71,6 @@ int main() {
     append(&builder, "hello, ");
     append(&builder, "world!");
     printf("%s\n", build(&builder));
+    delete(builder);
     return 0;
 }
