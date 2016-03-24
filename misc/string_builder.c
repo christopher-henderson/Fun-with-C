@@ -6,14 +6,14 @@ struct str_node {
     struct str_node* next;
 } Node;
 
-struct str_builder {
+typedef struct str_builder {
     struct str_node* front;
     struct str_node* back;
     unsigned int size;
 } Builder;
 
-struct str_builder make_builder() {
-    struct str_builder builder;
+Builder make_builder() {
+    Builder builder;
     builder.front = NULL;
     builder.back = NULL;
     builder.size = 0;
@@ -55,7 +55,7 @@ void append(struct str_builder* builder, char* string) {
     }
 }
 
-char* build(struct str_builder* builder) {
+char* build(Builder* builder) {
     char* string = (char*) malloc(sizeof(char)*builder->size);
     struct str_node* node = builder->front;
     for (int i=0; node ; i++) {
@@ -67,7 +67,7 @@ char* build(struct str_builder* builder) {
 }
 
 int main() {
-    struct str_builder builder = make_builder();
+    Builder builder = make_builder();
     append(&builder, "hello, ");
     append(&builder, "world!");
     printf("%s\n", build(&builder));
